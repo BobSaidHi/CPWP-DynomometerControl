@@ -10,7 +10,10 @@
 	"settings": {
 		"cSpell.words": [
 			"highlevel",
-			"pyvisa"
+			"odrive",
+			"odrv",
+			"pyvisa",
+			"visalib"
 		]
 	}
 }
