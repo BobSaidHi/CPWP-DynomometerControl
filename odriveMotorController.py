@@ -1,4 +1,8 @@
-# Imports
+# Imports - logger
+import logging
+import logger
+
+# Imports - control
 import odrive
 
 class odriveMotorController:
@@ -8,17 +12,25 @@ class odriveMotorController:
     # Troubleshooting: https://docs.odriverobotics.com/v/latest/troubleshooting.html
 
     def __init__(self):
+        # Start Logger
+        self.logger = logging.getLogger("DynamometerControl")
+        self.logger.setLevel(logging.DEBUG)
+
         # Connect to Odrive
         self.odrv0 = odrive.find_any
 
         # Get version number
-        print("self.odrv0.hw_version_major:", self.odrv0.hw_version_major) # 3
-        print("self.odrv0.hw_version_minor:", self.odrv0.hw_version_minor) # 6
-        print("self.odrv0.hw_version_revision:", self.odrv0.hw_version_revision) # Doesn’t work
+        try:
+            self.logger.info("self.odrv0.hw_version_major:", self.odrv0.hw_version_major) # 3
+            self.logger.info("self.odrv0.hw_version_minor:", self.odrv0.hw_version_minor) # 6
+            self.logger.info("self.odrv0.hw_version_revision:", self.odrv0.hw_version_revision) # Doesn’t work
 
-        print("self.odrv0.fw_version_major:", self.odrv0.fw_version_major) # 3
-        print("self.odrv0.fw_version_minor:", self.odrv0.fw_version_minor) # 5
-        print("self.odrv0.fw_version_revision:", self.odrv0.fw_version_revision) # 5
+            self.logger.info("self.odrv0.fw_version_major:", self.odrv0.fw_version_major) # 3
+            self.logger.info("self.odrv0.fw_version_minor:", self.odrv0.fw_version_minor) # 5
+            self.logger.info("self.odrv0.fw_version_revision:", self.odrv0.fw_version_revision) # 5
+        except AttributeError as e:
+            self.logger.error("Could not retrieve odrive information: " + str(e))
+            raise e
 
     def configure(self):
         raise NotImplementedError
@@ -34,7 +46,7 @@ class odriveMotorController:
 
         # https://docs.odriverobotics.com/v/0.5.5/getting-started.html#setting-other-hardware-parameters
         self.odrv0.config.enable_brake_resistor = True
-        self.odrv0.config.brake_resistance =  # 50 W Default, but needs to be in Ohms # 2 defualt, measure somewhat close
+        self.odrv0.config.brake_resistance = -1 # 50 W Default, but needs to be in Ohms # 2 defualt, measure somewhat close
         # self.odrv0.config.dc_max_negative_current = .01 # Default 10 mA (in Amps)
 
         self.odrv0.axis0.motor.config.pole_pairs = 7
@@ -66,24 +78,27 @@ class odriveMotorController:
         return False
 
     # Verify config
-    def verifyConfig():
-        print("self.odrv0.axis0.motor.config.current_lim:", self.odrv0.axis0.motor.config.current_lim)
-        print("self.odrv0.axis0.controller.config.vel_limit:", self.odrv0.axis0.controller.config.vel_limit)
-        print("self.odrv0.axis0.motor.config.calibration_current:", self.odrv0.axis0.motor.config.calibration_current)
-        print("self.odrv0.config.enable_brake_resistor:", self.odrv0.config.enable_brake_resistor)
-        print("self.odrv0.config.brake_resistance:", self.odrv0.config.brake_resistance)
-        print("self.odrv0.config.dc_max_negative_current:", self.odrv0.config.dc_max_negative_current)
-        print("self.odrv0.axis0.motor.config.pole_pairs:", self.odrv0.axis0.motor.config.pole_pairs)
-        print("self.odrv0.axis0.motor.config.torque_constant:", self.odrv0.axis0.motor.config.torque_constant)
-        print("self.odrv0.axis0.motor.config.motor_type:", self.odrv0.axis0.motor.config.motor_type)
-        print("self.odrv0.axis0.config.sensorless_ramp.ve", self.odrv0.axis0.config.sensorless_ramp.vel)
-        print("self.odrv0.axis0.config.sensorless_ramp.accel", self.odrv0.axis0.config.sensorless_ramp.accel)
-        print("self.odrv0.axis0.controller.config.vel_gain:" self.odrv0.axis0.controller.config.vel_gain)
-        print("self.odrv0.axis0.controller.config.vel_integrator_gain:", self.odrv0.axis0.controller.config.vel_integrator_gain)
-        print("self.odrv0.axis0.controller.config.control_mode:", self.odrv0.axis0.controller.config.control_mode)
-        print("self.odrv0.axis0.motor.config.current_lim:", self.odrv0.axis0.motor.config.current_lim)
-        print("self.odrv0.axis0.sensorless_estimator.config.pm_flux_linkage:", self.odrv0.axis0.sensorless_estimator.config.pm_flux_linkage)
-        print("self.odrv0.axis0.config.enable_sensorless_mode:",  self.odrv0.axis0.config.enable_sensorless_mode)
-        print(":", )
+    def verifyConfig(self):
+        try:
+            self.logger.info("self.odrv0.axis0.motor.config.current_lim:", self.odrv0.axis0.motor.config.current_lim)
+            self.logger.info("self.odrv0.axis0.controller.config.vel_limit:", self.odrv0.axis0.controller.config.vel_limit)
+            self.logger.info("self.odrv0.axis0.motor.config.calibration_current:", self.odrv0.axis0.motor.config.calibration_current)
+            self.logger.info("self.odrv0.config.enable_brake_resistor:", self.odrv0.config.enable_brake_resistor)
+            self.logger.info("self.odrv0.config.brake_resistance:", self.odrv0.config.brake_resistance)
+            self.logger.info("self.odrv0.config.dc_max_negative_current:", self.odrv0.config.dc_max_negative_current)
+            self.logger.info("self.odrv0.axis0.motor.config.pole_pairs:", self.odrv0.axis0.motor.config.pole_pairs)
+            self.logger.info("self.odrv0.axis0.motor.config.torque_constant:", self.odrv0.axis0.motor.config.torque_constant)
+            self.logger.info("self.odrv0.axis0.motor.config.motor_type:", self.odrv0.axis0.motor.config.motor_type)
+            self.logger.info("self.odrv0.axis0.config.sensorless_ramp.ve", self.odrv0.axis0.config.sensorless_ramp.vel)
+            self.logger.info("self.odrv0.axis0.config.sensorless_ramp.accel", self.odrv0.axis0.config.sensorless_ramp.accel)
+            self.logger.info("self.odrv0.axis0.controller.config.vel_gain:", self.odrv0.axis0.controller.config.vel_gain)
+            self.logger.info("self.odrv0.axis0.controller.config.vel_integrator_gain:", self.odrv0.axis0.controller.config.vel_integrator_gain)
+            self.logger.info("self.odrv0.axis0.controller.config.control_mode:", self.odrv0.axis0.controller.config.control_mode)
+            self.logger.info("self.odrv0.axis0.motor.config.current_lim:", self.odrv0.axis0.motor.config.current_lim)
+            self.logger.info("self.odrv0.axis0.sensorless_estimator.config.pm_flux_linkage:", self.odrv0.axis0.sensorless_estimator.config.pm_flux_linkage)
+            self.logger.info("self.odrv0.axis0.config.enable_sensorless_mode:",  self.odrv0.axis0.config.enable_sensorless_mode)
+        except AttributeError as e:
+            self.logger.error("Could not verify odrive information: " + str(e))
+            raise e
         return False
 

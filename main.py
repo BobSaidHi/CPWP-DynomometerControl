@@ -1,8 +1,15 @@
-# Imports
-import pyvisa
-import odriveMotorController
-import easy_scpi as scpi
+# Imports - Logging
+import logger
+import logging
+
+# Imports - Control
 from odriveMotorController import odriveMotorController
+import easy_scpi as scpi
+import pyvisa
+
+# Start Logger
+logger = logging.getLogger("DynamometerControl")
+logger.setLevel(logging.DEBUG)
 
 # https://pypi.org/project/easy-scpi/
 # https://pyvisa.readthedocs.io/en/latest/introduction/configuring.html
@@ -10,14 +17,14 @@ from odriveMotorController import odriveMotorController
 # Keysight / Agilent Technologies VISA
 #KATVisaRM = pyvisa.highlevel.ResourceManager("C:\\Program Files (x86)\\IVI Foundation\\VISA\\WinNT\\agvisa\\agbin\\visa32.dll")
 KATVisaRM = pyvisa.highlevel.ResourceManager()
-print("Keysight / Agilent Technologies VISA:", KATVisaRM.visalib)
-print("Keysight / Agilent Technologies VISA Resources:", KATVisaRM.list_resources())
+logger.debug("Keysight / Agilent Technologies VISA: " + str(KATVisaRM.visalib))
+logger.debug("Keysight / Agilent Technologies VISA Resources: " + str(KATVisaRM.list_resources()))
 
 # National Instruments VISA
 NI_VISA = 'C:\\Windows\\system32\\visa32.dll'
 NIVisaRM = pyvisa.highlevel.ResourceManager(NI_VISA)
-print("National Instruments VISA:", NIVisaRM.visalib)
-print("National Instruments VISA Resources:", NIVisaRM.list_resources())
+logger.debug("National Instruments VISA: " + str(NIVisaRM.visalib))
+logger.debug("National Instruments VISA Resources: " + str(NIVisaRM.list_resources()))
 
 # Connect to & Configure Power supply
 powerSupply = scpi.Instrument(port=None)
