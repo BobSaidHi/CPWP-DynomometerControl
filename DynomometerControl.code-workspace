@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../../../../../../../AppData/Local/Programs/Python/Python311-32/share/pyvisa"
+		}
+	],
+	"settings": {
+		"cSpell.words": [
+			"highlevel",
+			"pyvisa"
+		]
+	}
+}
