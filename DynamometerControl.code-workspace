@@ -15,6 +15,7 @@
 			"pyvisa",
 			"Rigol",
 			"scpi",
+			"Siglent",
 			"visalib"
 		]
 	}
