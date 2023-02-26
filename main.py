@@ -66,8 +66,16 @@ load = scpi.Instrument(port=None, backend=NI_VISA)
 
 # To start:
 
-"""
-motor1.startSensorless()
+#"""
+try:
+    motor1.startSensorless()
+except SystemExit as e:
+    logger.debug("Failed to start motor: " + str(e))
+    logger.info("Shutting off the power supply.")
+    powerSupply.write(":OUTP CH1,OFF") # Turn off the power supply
+    sys_exit(-1)
+
+
 #"""
 # TODO: finish
 

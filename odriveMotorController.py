@@ -42,8 +42,8 @@ class odriveMotorController:
             self.logger.info("self.odrv0.fw_version_revision:", self.odrv0.fw_version_revision) # 5
         except AttributeError as e:
             self.logger.fatal("Could not retrieve odrive information: " + str(e))
-            #raise e
-
+            raise e
+    
     def configure(self):
         """
         Reconfigures odrv0 and odrv0.axis0
@@ -93,7 +93,35 @@ class odriveMotorController:
 
         # Save config
         self.odrv0.save_configuration()
+        # TODO: Reconnect
         return False
+
+    def calibrate(self, bypassVerification):
+        """
+        Prompts for verification if bypassVerification is False and runs a full calibration.  This may not be required for sensorless mode
+        Skips verification if bypassVerification is True
+
+        @param bypassVerification (Boolean)
+        """
+        if not bypassVerification:
+            print("Ready to run a full calibration.  Continue? (Y/n): ")
+            response = input()
+            logger.debug('User response to "Ready to run a full calibration.  Continue? (Y/n): " ' + response)
+            if not response == 'Y':
+                logger.fatal("Motor calibration canceled by user!")
+                raise SystemExit("Motor calibration canceled by user!")
+            else:
+                logger.debug("Continuing...")
+                self.calibrate(True)
+        else:
+            logger.info("Starting calibration.")
+            self.odrv0.axis0.requested_state = odrive.AXIS_STATE_MOTOR_CALIBRATION
+            print("Press any key to save config once the motor stops or send a KeyboardInterrupt to cancel ([CTRL] + [C])")
+            response = input()
+            logger.debug('User response to "Press any key to save config once the motor stops or send a KeyboardInterrupt to cancel ([CTRL] + [C])" ' + response)
+            self.odrv0.save_configuration()
+            # TODO: Reconnect
+            raise NotImplementedError
 
     # Verify config
     def verifyConfig(self):
@@ -118,7 +146,7 @@ class odriveMotorController:
             self.logger.info("self.odrv0.axis0.motor.config.current_lim:", self.odrv0.axis0.motor.config.current_lim)
             self.logger.info("self.odrv0.axis0.sensorless_estimator.config.pm_flux_linkage:", self.odrv0.axis0.sensorless_estimator.config.pm_flux_linkage)
             self.logger.info("self.odrv0.axis0.config.enable_sensorless_mode:",  self.odrv0.axis0.config.enable_sensorless_mode)
-            # TODO: Verify calibration
+            self.logger.info("self.odrv0.axis0.motor.is_calibrated", self.odrv0.axis0.motor.is_calibrated)
         except AttributeError as e:
             self.logger.error("Could not verify odrive information: " + str(e))
             raise e
@@ -134,11 +162,26 @@ class odriveMotorController:
         """
         self.odrv0.axis0.config.sensorlesss_ramp = velocity
 
-    def startSensorless(self):
+    def startSensorless(self, bypassVerification=False):
         """
-        Starts the motor in sensorless mode assuming the target velocity has already been set
+        Prompts for verification if bypassVerification is False and starts the motor in sensorless mode assuming the target velocity has already been set
+        Skips verification if bypassVerification is True
+
+        @param bypassVerification (Boolean)
         """
-        self.odrv0.axis0.requested_state = odrive.AXIS_STATE_CLOSED_LOOP_CONTROL
+        if not bypassVerification:
+            print("Ready to enable the motor in sensorless mode.  Continue? (Y/n): ")
+            response = input()
+            logger.debug('User response to "Ready to enable the motor in sensorless mode.  Continue? (Y/n): " ' + response)
+            if not response == 'Y':
+                logger.fatal("Motor enable canceled by user!")
+                raise SystemExit("Motor enable canceled by user!")
+            else:
+                logger.debug("Continuing...")
+                self.startSensorless(True)
+        else:
+            logger.info("Starting the motor.")
+            self.odrv0.axis0.requested_state = odrive.AXIS_STATE_CLOSED_LOOP_CONTROL
 
     def stop(self):
         """
