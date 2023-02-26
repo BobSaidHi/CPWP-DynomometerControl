@@ -2,8 +2,17 @@
 import logging
 import logger
 
+# Imports - exit handling
+import sys
+
 # Imports - control
 import odrive
+
+
+# Start Logger
+logger = logging.getLogger("DynamometerControl")
+logger.setLevel(logging.DEBUG)
+
 
 class odriveMotorController:
     # Our controller is a bit old, this version is more relevant: # https://docs.odriverobotics.com/v/0.5.4/getting-started.html
@@ -12,6 +21,9 @@ class odriveMotorController:
     # Troubleshooting: https://docs.odriverobotics.com/v/latest/troubleshooting.html
 
     def __init__(self):
+        """
+        Object to control an Odrive motor
+        """
         # Start Logger
         self.logger = logging.getLogger("DynamometerControl")
         self.logger.setLevel(logging.DEBUG)
@@ -29,10 +41,14 @@ class odriveMotorController:
             self.logger.info("self.odrv0.fw_version_minor:", self.odrv0.fw_version_minor) # 5
             self.logger.info("self.odrv0.fw_version_revision:", self.odrv0.fw_version_revision) # 5
         except AttributeError as e:
-            self.logger.error("Could not retrieve odrive information: " + str(e))
-            raise e
+            self.logger.fatal("Could not retrieve odrive information: " + str(e))
+            #raise e
 
     def configure(self):
+        """
+        Reconfigures odrv0 and odrv0.axis0
+        """
+
         raise NotImplementedError
         # Reset
         self.odrv0.erase_configuration() # Error
@@ -73,12 +89,17 @@ class odriveMotorController:
 
         # https://docs.odriverobotics.com/v/0.5.5/getting-started.html#watchdog-timer
 
+        # TODO: Calibrate
+
         # Save config
         self.odrv0.save_configuration()
         return False
 
     # Verify config
     def verifyConfig(self):
+        """
+        Verifies the motor configuration of odrv0.asis0
+        """
         try:
             self.logger.info("self.odrv0.axis0.motor.config.current_lim:", self.odrv0.axis0.motor.config.current_lim)
             self.logger.info("self.odrv0.axis0.controller.config.vel_limit:", self.odrv0.axis0.controller.config.vel_limit)
@@ -97,8 +118,31 @@ class odriveMotorController:
             self.logger.info("self.odrv0.axis0.motor.config.current_lim:", self.odrv0.axis0.motor.config.current_lim)
             self.logger.info("self.odrv0.axis0.sensorless_estimator.config.pm_flux_linkage:", self.odrv0.axis0.sensorless_estimator.config.pm_flux_linkage)
             self.logger.info("self.odrv0.axis0.config.enable_sensorless_mode:",  self.odrv0.axis0.config.enable_sensorless_mode)
+            # TODO: Verify calibration
         except AttributeError as e:
             self.logger.error("Could not verify odrive information: " + str(e))
             raise e
         return False
+
+    # Control
+
+    def setVelocity(self, velocity):
+        """
+        Updates the motor's target velocity
+
+        @param velocity in rad/s
+        """
+        self.odrv0.axis0.config.sensorlesss_ramp = velocity
+
+    def startSensorless(self):
+        """
+        Starts the motor in sensorless mode assuming the target velocity has already been set
+        """
+        self.odrv0.axis0.requested_state = odrive.AXIS_STATE_CLOSED_LOOP_CONTROL
+
+    def stop(self):
+        """
+        Sets the motor's target velocity to 0 rad/s
+        """
+        self.setVelocity(0)
 
