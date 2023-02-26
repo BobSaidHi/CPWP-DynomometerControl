@@ -13,6 +13,8 @@
 			"odrive",
 			"odrv",
 			"pyvisa",
+			"Rigol",
+			"scpi",
 			"visalib"
 		]
 	}
