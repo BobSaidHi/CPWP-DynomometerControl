@@ -1,0 +1,13 @@
+Python 3.11.2 (tags/v3.11.2:878ead1, Feb  7 2023, 16:24:28) [MSC v.1934 32 bit (Intel)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import easy_scpi as scpi
+>>> import pyvisa
+>>> KATVisaRM = pyvisa.highlevel.ResourceManager()
+>>> powerSupply = scpi.Instrument(port="USB0")
+>>> powerSupply.connect()
+>>> powerSupply.connect()
+>>> print(powerSupply.query("*IDN?"))
+RIGOL TECHNOLOGIES,DP832,DP8C213302983,00.01.16
+
+>>>
+

@@ -1,0 +1,23 @@
+[Attempt 1]
+ * Connected to: USB0::0x1AB1::0x0E11::DP8C213302983::0::INSTR
+-> *IDN?
+<- RIGOL TECHNOLOGIES,DP832,DP8C213302983,00.01.16
+
+
+[Attempt 2]
+ * Connected to: USB0::0x1AB1::0x0E11::DP8C213302983::0::INSTR
+-> OUTPut?
+<- OFF
+-> :OUTPut:CVCC?
+<- CV
+-> :OUTPut:CVCC?
+<- CV
+-> :OUTP:CVCC? CH1
+<- CV
+-> OUTPut?
+<- OFF
+-> OUTPut?
+<- ON
+-> OUTPut?
+<- OFF
+
