@@ -45,7 +45,7 @@ class DP832:
             #raise e
         # Get PS information
         logger.info("Connected to: " + self.powerSupply.query("*IDN?"))
-        logger.debug("Power supply last self test results: " + self.powerSupply.query("**TST?"))
+        logger.debug("Power supply last self test results: " + self.powerSupply.query("*TST?"))
         logger.debug("Power supply Ch. 1 output mode: " + self.powerSupply.query(":OUTPut:MODE?"))
         logger.debug("Power supply Ch. 1 OCP state: " + self.powerSupply.query(":OUTPut:OCP? CH1"))
         logger.debug("Power supply Ch. 1 OCP value: " + self.powerSupply.query(":OUTP:OCP:VAL? CH1"))
@@ -56,14 +56,14 @@ class DP832:
 
         # Send a message to be displayed for fun and to make it obvious that it's being remote controlled
         self.powerSupply.write(':DISPlay:TEXT "CONNECTED TO DYNAMOTOR TEST APPLICATION",10,10')
-        time_sleep(2)
+        time_sleep(2.5)
         self.powerSupply.write(":DISPlay:TEXT:CLEar")
 
         # Set parameters
         self.PS_VOLTAGE = voltage  # 12.0
         self.PS_CURRENT = current # 3.0
-        logger.info("Target power supply voltage: " + self.PS_VOLTAGES_VOLTAGE)
-        logger.info("Target power supply current: " + self.PS_CURRENT)
+        logger.info("Target power supply voltage: " + str(self.PS_VOLTAGE))
+        logger.info("Target power supply current: " + str(self.PS_CURRENT))
         self.powerSupply.write(":APPLy CH1,12.0,3.0")
 
         # Verify parameters
@@ -96,6 +96,7 @@ class DP832:
         """
         Turns channel 1 off
         """
+        logger.info("Turning ps channel 1 off.")
         self.powerSupply.write(":OUTP CH1,OFF")
 
     # Get data
@@ -115,6 +116,8 @@ class DP832:
         Fetches the last known output voltage of the power supply
 
         Run updateOutputStats() to update this value
+
+        @returns The last known output voltage of the power supply
         """
         return self.output_voltage
 
@@ -123,6 +126,8 @@ class DP832:
         Fetches the last known output current of the power supply
 
         Run updateOutputStats() to update this value
+
+        @returns The last known output current of the power supply
         """
         return self.output_current
     
@@ -131,6 +136,8 @@ class DP832:
         Fetches the last known output power of the power supply
 
         Run updateOutputStats() to update this value
+
+        @returns The last known output power of the power supply
         """
         return self.output_power
 

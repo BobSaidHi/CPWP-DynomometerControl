@@ -48,12 +48,12 @@ try:
 except AttributeError as e:
     logger.fatal("Failed to connect to odrive controller: " + str(e))
     logger.info("Shutting off the power supply.")
-    powerSupply.write(":OUTP CH1,OFF") # Turn off the power supply
+    powerSupply.disable() # Turn off the power supply
     sys_exit(-1)
 except NotImplementedError as e:
     logger.fatal("Error when connecting odrive controller du to incomplete script (Yes, you may blame programming this time): " + str(e))
     logger.info("Shutting off the power supply.")
-    powerSupply.write(":OUTP CH1,OFF") # Turn off the power supply
+    powerSupply.disable() # Turn off the power supply
     sys_exit(-1)
 
 # Connect to & Configure Multimeter
@@ -66,16 +66,14 @@ load = scpi.Instrument(port=None, backend=NI_VISA)
 
 # To start:
 
-#"""
+"""s
 try:
     motor1.startSensorless()
 except SystemExit as e:
     logger.debug("Failed to start motor: " + str(e))
     logger.info("Shutting off the power supply.")
-    powerSupply.write(":OUTP CH1,OFF") # Turn off the power supply
+    powerSupply.disable() # Turn off the power supply
     sys_exit(-1)
-
-
 #"""
 # TODO: finish
 
