@@ -31,6 +31,11 @@ if PS_ENABLE or MULTIMETER_ENABLE or LOAD_ENABLE:
         logger.debug("Importing powerSupply")
         from powerSupply import DP832
 
+# Imports - data handling
+from DataRecorder import DataRecorder
+recorder = DataRecorder()
+recorder.write_data(-1.9, -1.3)
+
 # Warn if PS Control unavailable
 if (not PS_ENABLE) and CONTROLLER_ENABLE:
     logger.warning("Controller enabled without power supply!  Power shutoff on error unavailable.")
@@ -102,6 +107,9 @@ if LOAD_ENABLE:
     load = scpi.Instrument(port=None, backend=NI_VISA)
     # TODO: finish
 
+# Prepare data collection
+recorder = DataRecorder()
+
 # To start:
 if CONTROLLER_ENABLE:
     if TEST_MODE == "DYNO":
@@ -132,8 +140,7 @@ if CONTROLLER_ENABLE:
 try:
     while True:
         if CONTROLLER_ENABLE:
-            motor1.getDCBusVoltage()
-            motor1.getDCBusCurrent()
+            recorder.write_data(motor1.getDCBusVoltage(), motor1.getDCBusCurrent())
         if PS_ENABLE:
             powerSupply.updateOutputStats()
             powerSupply.getOutputVoltage()
