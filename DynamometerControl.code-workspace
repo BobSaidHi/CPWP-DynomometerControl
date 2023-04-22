@@ -9,12 +9,14 @@
 	],
 	"settings": {
 		"cSpell.words": [
+			"DYNO",
 			"highlevel",
 			"odrive",
 			"odrv",
 			"pyvisa",
 			"Rigol",
 			"scpi",
+			"Sensorless",
 			"Siglent",
 			"visalib"
 		]

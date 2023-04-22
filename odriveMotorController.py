@@ -189,3 +189,21 @@ class odriveMotorController:
         """
         self.setVelocity(0)
 
+    def getDCBusVoltage(self):
+        """
+        @return Voltage on the DC bus as measured by the ODrive.
+        """
+        temp = self.odrv0.vbus_voltage
+        logger.debug("DCBusVoltage: " + temp)
+        return 
+
+    def getDCBusCurrent(self):
+        """
+        @return Current on the DC bus as calculated by the ODrive.
+            A positive value means that the ODrive is consuming power from the power supply, a negative value means that the ODrive is sourcing power to the power supply.
+        This value is equal to the sum of the motor currents and the brake resistor currents. The motor currents are measured, the brake resistor current is calculated based on config.brake_resistance.
+
+        """
+        temp = self.odrv0.ibus
+        return logger.debug("DCBusCurrent: " + temp)
+
