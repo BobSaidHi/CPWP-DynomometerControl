@@ -108,7 +108,7 @@ if LOAD_ENABLE:
     # TODO: finish
 
 # Prepare data collection
-recorder = DataRecorder()
+recorder = DataRecorder(PS_ENABLE=False, MULTIMETER_ENABLE=False, LOAD_ENABLE=False)
 
 # To start:
 if CONTROLLER_ENABLE:
