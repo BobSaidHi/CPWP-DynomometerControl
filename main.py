@@ -1,6 +1,10 @@
 """
 main.py
-This script is intended to perform semi-automated testing on a generator as well as wind-tunnel testing for a wind turbine.  Data is recorded to a `.csv` file in the `/output/` directory and logs are stored in `/logs/`.  Different components can be enabled or disabled by changing the variables marked by `# CONFIG`.
+This script is intended to perform semi-automated testing on a generator
+    as well as wind-tunnel testing for a wind turbine.  Data is recorded
+    to a `.csv` file in the `/output/` directory and logs are stored in
+    `/logs/`.  Different components can be enabled or disabled by
+    changing the variables marked by `# CONFIG`.
 
 @author BSI
 
