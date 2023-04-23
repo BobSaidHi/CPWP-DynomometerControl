@@ -1,3 +1,14 @@
+"""
+main.py
+This script is intended to perform semi-automated testing on a generator as well as wind-tunnel testing for a wind turbine.  Data is recorded to a `.csv` file in the `/output/` directory and logs are stored in `/logs/`.  Different components can be enabled or disabled by changing the variables marked by `# CONFIG`.
+
+@author BSI
+
+This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+"""
+
 # Imports - Logging
 import logger
 import logging
@@ -9,27 +20,27 @@ from sys import exit as sys_exit
 logger = logging.getLogger("DynamometerControl")
 logger.setLevel(logging.DEBUG)
 
-## CONFIG
-CONTROLLER_ENABLE = True
-PS_ENABLE = False
-MULTIMETER_ENABLE = False
-LOAD_ENABLE = False
-#TEST_MODE = "DYNO"
-TEST_MODE = "TUNNEL"
+# CONFIG
+CONTROLLER_ENABLE = True # CONFIG: Boolean
+PS_ENABLE = False # CONFIG: Boolean
+MULTIMETER_ENABLE = False # CONFIG: Boolean
+LOAD_ENABLE = False # CONFIG: Boolean
+#TEST_MODE = "DYNO" # CONFIG: "DYNO" or "TUNNEL"
+TEST_MODE = "TUNNEL" # CONFIG: "DYNO" or "TUNNEL"
 
 logger.info("Test Config: CONTROLLER_ENABLE=%s, PS_ENABLE=%s, MULTIMETER_ENABLE=%s, LOAD_ENABLE=%s", CONTROLLER_ENABLE, PS_ENABLE, MULTIMETER_ENABLE, LOAD_ENABLE)
 
 # Imports - Control
 if CONTROLLER_ENABLE:
     logger.debug("Importing odriveMotorController")
-    from odriveMotorController import odriveMotorController
+    from OdriveMotorController import odriveMotorController
 if PS_ENABLE or MULTIMETER_ENABLE or LOAD_ENABLE:
     logger.debug("Importing easy_scpi and pyvisa")
     import easy_scpi as scpi
     import pyvisa
     if PS_ENABLE:
         logger.debug("Importing powerSupply")
-        from powerSupply import DP832
+        from PowerSupply import DP832
 
 # Imports - data handling
 from DataRecorder import DataRecorder
@@ -70,6 +81,9 @@ if PS_ENABLE or MULTIMETER_ENABLE or LOAD_ENABLE:
         powerSupply.enable()
 
 def PSSafeShutdown():
+    """
+    Checks to see if the power supply has been configured and shuts it off if it has.
+    """
     if PS_ENABLE:
         powerSupply.disable()
     else:
@@ -93,6 +107,9 @@ if CONTROLLER_ENABLE:
         sys_exit(-1)
 
 def ControllerSafeShutdown():
+    """
+    Checks to see if the motor controller has been configured and shuts it off if it has.
+    """
     ## TODO: Verify that this is correct
     if CONTROLLER_ENABLE:
         motor1.stop()
@@ -132,11 +149,6 @@ if CONTROLLER_ENABLE:
             sys_exit(-1)
 
 # Main loop
-#"""
-
-#"""
-
-
 try:
     while True:
         if CONTROLLER_ENABLE:

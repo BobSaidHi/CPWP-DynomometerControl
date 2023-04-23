@@ -1,3 +1,14 @@
+"""
+OdriveMotorController.py
+Control an Odrive motor controller over USB
+
+@author BSI
+
+This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+"""
+
 # Imports - logger
 import logging
 import logger
@@ -15,10 +26,15 @@ logger.setLevel(logging.DEBUG)
 
 
 class odriveMotorController:
-    # Our controller is a bit old, this version is more relevant: # https://docs.odriverobotics.com/v/0.5.4/getting-started.html
-    # Latest: https://docs.odriverobotics.com/v/0.5.5/specifications.html
-    # https://docs.odriverobotics.com/v/0.5.5/getting-started.html
-    # Troubleshooting: https://docs.odriverobotics.com/v/latest/troubleshooting.html
+    """
+    Control an Odrive motor controller over USB
+
+    Useful links:
+    Our controller is a bit old, this version is more relevant: # https://docs.odriverobotics.com/v/0.5.4/getting-started.html
+    Latest: https://docs.odriverobotics.com/v/0.5.5/specifications.html
+    https://docs.odriverobotics.com/v/0.5.5/getting-started.html
+    Troubleshooting: https://docs.odriverobotics.com/v/latest/troubleshooting.html
+    """
 
     def __init__(self):
         """

@@ -1,3 +1,14 @@
+"""
+ElectronicLoad.py
+Control a VISA compatible electronic load with SCPI over USB
+
+@author BSI
+
+This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+"""
+
 # Imports - logger
 import logging
 import logger
@@ -19,13 +30,18 @@ logger.setLevel(logging.DEBUG)
 
 # easy_scpi Docs: https://pypi.org/project/easy-scpi/
 """
-# TODO: Figure out how to extend Pythong classes?s
+# TODO: Figure out how to extend Python classes?s
 class SDL1020X(scpi.Instrument):
     def __init__(self):
         pass
 """
 
 class SDL1020X:
+    """
+    Control a Siglent SDL1020X-E 200W electronic load via SCPI over USB
+
+    @author BSI
+    """
     def __init__(self, port):
         """
         Wrapper object for easy_scpi.Instrument object to control a Siglent SDL1020X-E 200W electronic load over SCPI
@@ -88,7 +104,7 @@ class SDL1020X:
         logger.debug("Electronic load CR resistor range value: " + str(self.instrument.query(":SOURce:RESistance:RRANGe?")))
 
         logger.debug("Electronic load OCP state: " + self.powerSupply.query(":SOURce:CURRent:PROTection:STATe?")) # Not sure, this wasn't how it was in the manuel but it makes more since
-        raise NotImplementedError
+        raise NotImplementedError # TODO
         # Verify parameters
         logger.debug("Power supply Ch. 1 OCP value: " + self.powerSupply.query(":OUTP:OCP:VAL? CH1"))
         logger.debug("Power supply Ch. 1 OVP state: " + self.powerSupply.query(":OUTP:OVP? CH1"))
