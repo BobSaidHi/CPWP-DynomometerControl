@@ -104,7 +104,7 @@ class SDL1020X:
         logger.debug("Electronic load CR resistor range value: " + str(self.instrument.query(":SOURce:RESistance:RRANGe?")))
 
         logger.debug("Electronic load OCP state: " + self.powerSupply.query(":SOURce:CURRent:PROTection:STATe?")) # Not sure, this wasn't how it was in the manuel but it makes more since
-        raise NotImplementedError # TODO
+        
         # Verify parameters
         logger.debug("Power supply Ch. 1 OCP value: " + self.powerSupply.query(":OUTP:OCP:VAL? CH1"))
         logger.debug("Power supply Ch. 1 OVP state: " + self.powerSupply.query(":OUTP:OVP? CH1"))
@@ -112,6 +112,7 @@ class SDL1020X:
         logger.debug("Power supply OTP state: " + self.powerSupply.query(":SYSTem:OTP?"))
         logger.debug("Power supply system version: " + self.powerSupply.query(":SYSTem:VERSion?"))
         
+        raise NotImplementedError # TODO
 
     # Control
     def enable(self):

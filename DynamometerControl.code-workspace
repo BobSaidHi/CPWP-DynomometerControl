@@ -19,6 +19,7 @@
 			"Sensorless",
 			"Siglent",
 			"visalib"
-		]
+		],
+		"workbench.colorTheme": "Default Dark+"
 	}
 }
