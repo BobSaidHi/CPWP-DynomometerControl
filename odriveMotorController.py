@@ -1,3 +1,14 @@
+"""
+OdriveMotorController.py
+Control an Odrive motor controller over USB
+
+@author BSI
+
+This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+"""
+
 # Imports - logger
 import logging
 import logger
@@ -15,10 +26,15 @@ logger.setLevel(logging.DEBUG)
 
 
 class odriveMotorController:
-    # Our controller is a bit old, this version is more relevant: # https://docs.odriverobotics.com/v/0.5.4/getting-started.html
-    # Latest: https://docs.odriverobotics.com/v/0.5.5/specifications.html
-    # https://docs.odriverobotics.com/v/0.5.5/getting-started.html
-    # Troubleshooting: https://docs.odriverobotics.com/v/latest/troubleshooting.html
+    """
+    Control an Odrive motor controller over USB
+
+    Useful links:
+    Our controller is a bit old, this version is more relevant: # https://docs.odriverobotics.com/v/0.5.4/getting-started.html
+    Latest: https://docs.odriverobotics.com/v/0.5.5/specifications.html
+    https://docs.odriverobotics.com/v/0.5.5/getting-started.html
+    Troubleshooting: https://docs.odriverobotics.com/v/latest/troubleshooting.html
+    """
 
     def __init__(self):
         """
@@ -188,4 +204,22 @@ class odriveMotorController:
         Sets the motor's target velocity to 0 rad/s
         """
         self.setVelocity(0)
+
+    def getDCBusVoltage(self):
+        """
+        @return Voltage on the DC bus as measured by the ODrive.
+        """
+        temp = self.odrv0.vbus_voltage
+        logger.debug("DCBusVoltage: " + temp)
+        return 
+
+    def getDCBusCurrent(self):
+        """
+        @return Current on the DC bus as calculated by the ODrive.
+            A positive value means that the ODrive is consuming power from the power supply, a negative value means that the ODrive is sourcing power to the power supply.
+        This value is equal to the sum of the motor currents and the brake resistor currents. The motor currents are measured, the brake resistor current is calculated based on config.brake_resistance.
+
+        """
+        temp = self.odrv0.ibus
+        return logger.debug("DCBusCurrent: " + temp)
 
